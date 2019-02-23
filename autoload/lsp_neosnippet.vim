@@ -6,6 +6,7 @@ function! lsp_neosnippet#get_vim_completion_item(item, ...) abort
     if has_key(a:item, 'insertTextFormat') && a:item['insertTextFormat'] == 2
         let l:trigger = a:item['label']
         let l:snippet = substitute(a:item['insertText'], '\%x00', '\\n', 'g')
+        let l:snippet = l:snippet . '${0}'
 
         let l:completion['user_data'] = json_encode(
                     \   {
