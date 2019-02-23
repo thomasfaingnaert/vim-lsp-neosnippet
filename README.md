@@ -47,7 +47,7 @@ if executable('clangd')
 endif
 
 if has('conceal')
-  set conceallevel=2 concealcursor=niv
+    set conceallevel=2 concealcursor=niv
 endif
 
 set completeopt+=menuone
