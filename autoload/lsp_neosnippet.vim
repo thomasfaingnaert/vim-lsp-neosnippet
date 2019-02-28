@@ -17,8 +17,13 @@ function! lsp_neosnippet#get_vim_completion_item(item, ...) abort
     return l:completion
 endfunction
 
-function! lsp_neosnippet#get_supported_capabilities() abort
-    let l:capabilities = lsp#default_get_supported_capabilities()
+function! lsp_neosnippet#get_supported_capabilities(server_info) abort
+    let l:capabilities = lsp#default_get_supported_capabilities(a:server_info)
+
+    if has_key(a:server_info, 'config') && has_key(a:server_info['config'], 'snippets') &&
+                \ a:server_info['config']['snippets'] == 0
+        return l:capabilities
+    endif
 
     let l:capabilities['textDocument'] =
                 \   {
