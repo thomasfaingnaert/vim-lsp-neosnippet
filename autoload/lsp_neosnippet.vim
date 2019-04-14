@@ -3,15 +3,29 @@ function! lsp_neosnippet#get_vim_completion_item(item, ...) abort
 
     let l:completion = call(function('lsp#omni#default_get_vim_completion_item'), [a:item] + a:000)
 
+    " Set trigger and snippet
     if has_key(a:item, 'insertTextFormat') && a:item['insertTextFormat'] == 2
-        let l:trigger = a:item['label']
-        let l:snippet = a:item['insertText'] . '${0}'
+        if has_key(a:item, 'insertText')
+            let l:trigger = a:item['label']
+            let l:snippet = a:item['insertText']
 
-        let l:completion['user_data'] = json_encode(
-                    \   {
-                    \       'snippet_trigger': l:trigger,
-                    \       'snippet': l:snippet
-                    \   })
+            let l:user_data = {'vim-lsp-neosnippet': { 'trigger': l:trigger, 'snippet': l:snippet } }
+            let l:completion['user_data'] = json_encode(l:user_data)
+        elseif has_key(a:item, 'textEdit')
+            let l:user_data = json_decode(l:completion['user_data'])
+
+            let l:trigger = a:item['label']
+            let l:snippet = l:user_data['vim-lsp/textEdit']['newText']
+
+            " neosnippet.vim expects the tabstops to have curly braces around
+            " them, e.g. ${1} instead of $1, so we add these in now
+            let l:snippet = substitute(l:snippet, '\$\(\d\+\)', '${\1}', 'g')
+
+            let l:user_data['vim-lsp/textEdit']['newText'] = ''
+
+            let l:user_data['vim-lsp-neosnippet'] = { 'trigger': l:trigger, 'snippet': l:snippet }
+            let l:completion['user_data'] = json_encode(l:user_data)
+        endif
     endif
 
     return l:completion
@@ -36,3 +50,25 @@ function! lsp_neosnippet#get_supported_capabilities(server_info) abort
 
     return l:capabilities
 endfunction
+
+function! s:expand_snippet(timer) abort
+    call feedkeys("\<C-r>=neosnippet#anonymous(\"" . s:snippet . "\")\<CR>")
+endfunction
+
+function! s:handle_snippet(item) abort
+    if !has_key(a:item, 'user_data')
+        return
+    endif
+
+    let l:user_data = json_decode(a:item['user_data'])
+
+    let s:trigger = l:user_data['vim-lsp-neosnippet']['trigger']
+    let s:snippet = l:user_data['vim-lsp-neosnippet']['snippet']
+
+    call timer_start(0, function('s:expand_snippet'))
+endfunction
+
+augroup lsp_neosnippet
+    autocmd!
+    autocmd CompleteDone * call s:handle_snippet(v:completed_item)
+augroup END
