@@ -62,6 +62,10 @@ function! s:handle_snippet(item) abort
 
     let l:user_data = json_decode(a:item['user_data'])
 
+    if (type(l:user_data) != type({})) || (!has_key(l:user_data, 'vim-lsp-neosnippet'))
+        return
+    endif
+
     let s:trigger = l:user_data['vim-lsp-neosnippet']['trigger']
     let s:snippet = l:user_data['vim-lsp-neosnippet']['snippet']
 
