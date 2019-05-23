@@ -9,6 +9,7 @@ You can use both Vim's built-in omnifunc or [asyncomplete.vim](https://github.co
 This plugin requires [neosnippet.vim](https://github.com/Shougo/neosnippet.vim), [vim-lsp](https://github.com/prabirshrestha/vim-lsp) and their dependencies.
 If these are already installed and you are using [vim-plug](https://github.com/junegunn/vim-plug), you can simply add this to your vimrc:
 ```vim
+Plug 'thomasfaingnaert/vim-lsp-snippets'
 Plug 'thomasfaingnaert/vim-lsp-neosnippet'
 ```
 
@@ -17,6 +18,7 @@ Otherwise, you can install these using [vim-plug](https://github.com/junegunn/vi
 Plug 'Shougo/neosnippet.vim'
 Plug 'prabirshrestha/async.vim'
 Plug 'thomasfaingnaert/vim-lsp', {'branch': 'ultisnips-integration'}
+Plug 'thomasfaingnaert/vim-lsp-snippets'
 Plug 'thomasfaingnaert/vim-lsp-neosnippet'
 ```
 
@@ -38,6 +40,7 @@ call plug#begin()
 Plug 'Shougo/neosnippet.vim'
 Plug 'prabirshrestha/async.vim'
 Plug 'thomasfaingnaert/vim-lsp', {'branch': 'ultisnips-integration'}
+Plug 'thomasfaingnaert/vim-lsp-snippets'
 Plug 'thomasfaingnaert/vim-lsp-neosnippet'
 
 call plug#end()
