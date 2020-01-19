@@ -3,6 +3,9 @@ function! s:escape_snippet(text) abort
     " them, e.g. ${1} instead of $1, so we add these in now.
     let l:snippet = substitute(a:text, '\$\(\d\+\)', '${\1}', 'g')
 
+    " Escape single quotes
+    let l:snippet = substitute(l:snippet, "'", "''", 'g')
+
     " Make sure the snippet ends in ${0}
     if l:snippet !~# "\${0}$"
         let l:snippet .= "${0}"
