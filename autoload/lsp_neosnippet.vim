@@ -15,5 +15,5 @@ function! s:escape_snippet(text) abort
 endfunction
 
 function! lsp_neosnippet#expand_snippet(params) abort
-    call feedkeys("\<C-r>=neosnippet#anonymous('" . s:escape_snippet(a:params.snippet) . "')\<CR>")
+    call feedkeys("\<C-r>=neosnippet#anonymous('" . s:escape_snippet(a:params.snippet) . "')\<CR>", 'n')
 endfunction
